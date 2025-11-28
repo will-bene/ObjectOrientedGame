@@ -1,6 +1,6 @@
 //global vars
 float bombTimer=0;
-float bombTimerLength=180;
+float bombTimerLength=80;
 
 boolean gameOver=false;
 
@@ -20,6 +20,7 @@ Bomb heldBomb;
 void setup()
 {
   size(400, 400);
+  ellipseMode(CENTER);
 }
 
 void draw()
@@ -43,7 +44,33 @@ void draw()
 
 void mousePressed()
 {
-    
+    findNearestBomb();//.myColor=(255);
 }  
+
+void findNearestBomb()
+{
+  float curDist=48;
+  float bombRadius=48;//radius around mouse that bomb origin has to be in
+  Bomb curClosest=null; //currently closest bomb
+  PVector mousePos = new PVector(mouseX, mouseY);
+  for (int i = 0; i < bombs.size(); i++)
+  {//loop through every bomb
+    Bomb curBomb=bombs.get(i);
+    float bombDist=mousePos.dist(curBomb.pos); //distance from cursor to currently checked bomb
+    if (bombDist<curDist && bombDist<bombRadius)
+    {
+      curDist=bombDist;
+      curClosest=curBomb;
+    }
+  } 
+  
+  if (curClosest!=null)
+  {
+    //do action on requested closest bomb
+    println(curDist);
+    curClosest.myColor=color(255);
+  }
+  
+}
 
 //other functions

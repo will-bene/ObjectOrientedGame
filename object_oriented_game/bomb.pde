@@ -42,6 +42,7 @@ class Bomb
 
   void pickNewTarget()
   {
+    
     targetTimer++;
     if (targetTimer>=targetTimerLength)
     {
