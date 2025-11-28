@@ -67,10 +67,21 @@ void findNearestBomb()
   if (curClosest!=null)
   {
     //do action on requested closest bomb
-    println(curDist);
-    curClosest.myColor=color(255);
+    //println(curDist);
+    //curClosest.myColor=color(255);
+    curClosest.pickup();
+    heldBomb=curClosest;
   }
   
+}
+
+void mouseReleased()
+{
+    if (heldBomb!=null)
+    {
+       heldBomb.dropoff(); 
+       heldBomb=null;
+    }
 }
 
 //other functions
