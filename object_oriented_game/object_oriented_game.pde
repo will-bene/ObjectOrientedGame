@@ -21,6 +21,9 @@ void setup()
 {
   size(400, 400);
   ellipseMode(CENTER);
+  resetGame();
+  
+  
 }
 
 void draw()
@@ -34,11 +37,18 @@ void draw()
     bombTimer=0;
   }
   
+  for (Sorter sorters : sorters)
+  {//do every sorter function
+    sorters.drawSelf();
+  }  
+  
   for (Bomb bombs : bombs)
-  {
+  {//do every bomb function
     bombs.drawSelf();
     bombs.step();
   }
+  
+
   
 }
 
@@ -55,10 +65,10 @@ void findNearestBomb()
   PVector mousePos = new PVector(mouseX, mouseY);
   for (int i = 0; i < bombs.size(); i++)
   {//loop through every bomb
-    Bomb curBomb=bombs.get(i);
+    Bomb curBomb=bombs.get(i);//get current bomb check
     float bombDist=mousePos.dist(curBomb.pos); //distance from cursor to currently checked bomb
     if (bombDist<curDist && bombDist<bombRadius)
-    {
+    {//if bomb is within pickup radius and less than the one before, make it take over as the currently closest bomb
       curDist=bombDist;
       curClosest=curBomb;
     }
@@ -67,10 +77,8 @@ void findNearestBomb()
   if (curClosest!=null)
   {
     //do action on requested closest bomb
-    //println(curDist);
-    //curClosest.myColor=color(255);
-    curClosest.pickup();
-    heldBomb=curClosest;
+    curClosest.pickup(); //pickup bomb
+    heldBomb=curClosest; //set currently held bomb as that bomb
   }
   
 }
@@ -84,4 +92,28 @@ void mouseReleased()
     }
 }
 
-//other functions
+void keyPressed()
+{
+   resetGame(); 
+}
+
+//custom functions
+void resetGame()
+{//called when resetting game
+    for (int i = bombs.size()-1; i >-1; i--)
+    {//remove all bombs
+       bombs.remove(i);
+    }
+    for (int i = sorters.size()-1; i>-1; i--)
+    {//remove all sorters
+       sorters.remove(i);
+    }
+    for (int i = particles.size()-1; i>-1; i--)
+    {//remove all particles
+       particles.remove(i);
+    }
+    score=0; //reset score
+    sorters.add(new Sorter(30, 50, 0));
+    sorters.add(new Sorter(width-180, 50, 1));
+    
+}

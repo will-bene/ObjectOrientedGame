@@ -41,7 +41,7 @@ class Bomb
   }
 
   void pickNewTarget()
-  {
+  {//pick a new movement position to target after a randomized timer
     
     targetTimer++;
     if (targetTimer>=targetTimerLength)
@@ -55,12 +55,12 @@ class Bomb
   }
   
   void pickup()
-  {
+  {//on mouse pickup
     grabbed=true;
   }
   
   void dropoff()
-  {
+  {//on mouse dropoff
     grabbed=false; 
   }
 }
