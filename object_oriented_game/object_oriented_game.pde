@@ -1,6 +1,6 @@
 //global vars
 float bombTimer=0;
-float bombTimerLength=80;
+float bombTimerLength=90;
 
 boolean gameOver=false;
 
@@ -22,8 +22,6 @@ void setup()
   size(400, 400);
   ellipseMode(CENTER);
   resetGame();
-  
-  
 }
 
 void draw()
@@ -35,31 +33,39 @@ void draw()
     //spawn bomb after timer is up
     bombs.add(new Bomb());
     bombTimer=0;
+    bombTimerLength--; //make bombs come faster as time goes on
+    bombTimerLength = constrain(bombTimerLength, 40, 80); //constrain so it doesn't go too low
   }
-  
+
   for (Sorter sorters : sorters)
   {//do every sorter function
     sorters.drawSelf();
-  }  
-  
+  }
+
   for (Bomb bombs : bombs)
   {//do every bomb function
     bombs.drawSelf();
     bombs.step();
   }
-  
+
+  for (Particle particles : particles)
+  {//do every particle function
+    particles.drawSelf();
+    particles.step();
+  }
+
   if (gameOver)
   {//game over screen
-   drawGameOver(); 
+    drawGameOver();
   }
-  
+
   drawScore(); //draw score
 }
 
 void mousePressed()
 {
-    findNearestBomb();//.myColor=(255);
-}  
+  findNearestBomb();//.myColor=(255);
+}
 
 void findNearestBomb()
 {
@@ -76,69 +82,62 @@ void findNearestBomb()
       curDist=bombDist;
       curClosest=curBomb;
     }
-  } 
-  
+  }
+
   if (curClosest!=null)
   {
     //do action on requested closest bomb
     curClosest.pickup(); //pickup bomb
     heldBomb=curClosest; //set currently held bomb as that bomb
   }
-  
 }
 
 void mouseReleased()
 {
-    if (heldBomb!=null)
-    {
-       heldBomb.dropoff(); 
-       heldBomb=null;
-    }
+  if (heldBomb!=null)
+  {
+    heldBomb.dropoff();
+    heldBomb=null;
+  }
 }
 
 void keyPressed()
 {
-   resetGame(); 
+  resetGame();
 }
 
 //custom functions
 void resetGame()
 {//called when resetting game
-    //for (int i = bombs.size()-1; i >-1; i--)
-    //{//remove all bombs
-    //   bombs.remove(i);
-    //}
-    //for (int i = sorters.size()-1; i>-1; i--)
-    //{//remove all sorters
-    //   sorters.remove(i);
-    //}
-    //for (int i = particles.size()-1; i>-1; i--)
-    //{//remove all particles
-    //   particles.remove(i);
-    //}
-    bombs.clear();
-    sorters.clear();
-    particles.clear();
-    
-    score=0; //reset score
-    sorters.add(new Sorter(30, 50, 0));
-    sorters.add(new Sorter(width-180, 50, 1));
-    gameOver=false;
+
+  //clear objects
+  bombs.clear();
+  sorters.clear();
+  particles.clear();
+
+  score=0; //reset score
+  sorters.add(new Sorter(30, 50, 0)); //create left sorter
+  sorters.add(new Sorter(width-180, 50, 1)); //create right sorter
+
+  bombTimer=0;
+  bombTimerLength=80;
+
+  gameOver=false; //reset game over
 }
 
 void drawScore()
-{
- textAlign(CENTER, TOP);
- textSize(24);
- fill(0);
- text("Score: "+str(score), width/2, 0);
+{//draw score value
+  textAlign(CENTER, TOP);
+  textSize(24);
+  fill(0);
+  text("Score: "+str(score), width/2, 0);
 }
 
 void drawGameOver()
-{
- //background(255);
- textAlign(CENTER, TOP);
- textSize(24);
- fill(0);
- text("Better luck next time!\n\nPress any button to reset", width/2, 64);  
+{//draw game over screen
+  //background(255);
+  textAlign(CENTER, TOP);
+  textSize(24);
+  fill(0);
+  text("Better luck next time!\n\nPress any button to reset", width/2, 64);
 }

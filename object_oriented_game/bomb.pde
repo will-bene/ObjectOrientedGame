@@ -105,6 +105,10 @@ class Bomb
   {//explode! after timer is up or placed wrongly
     gameOver=true;
     exploded=true;
+    for (int i = 0; i < 25; i++)
+    {
+       particles.add(new Particle(pos.x, pos.y)); 
+    }
   }
   
   void handleFuseTimer()
