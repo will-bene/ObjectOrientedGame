@@ -100,18 +100,22 @@ void keyPressed()
 //custom functions
 void resetGame()
 {//called when resetting game
-    for (int i = bombs.size()-1; i >-1; i--)
-    {//remove all bombs
-       bombs.remove(i);
-    }
-    for (int i = sorters.size()-1; i>-1; i--)
-    {//remove all sorters
-       sorters.remove(i);
-    }
-    for (int i = particles.size()-1; i>-1; i--)
-    {//remove all particles
-       particles.remove(i);
-    }
+    //for (int i = bombs.size()-1; i >-1; i--)
+    //{//remove all bombs
+    //   bombs.remove(i);
+    //}
+    //for (int i = sorters.size()-1; i>-1; i--)
+    //{//remove all sorters
+    //   sorters.remove(i);
+    //}
+    //for (int i = particles.size()-1; i>-1; i--)
+    //{//remove all particles
+    //   particles.remove(i);
+    //}
+    bombs.clear();
+    sorters.clear();
+    particles.clear();
+    
     score=0; //reset score
     sorters.add(new Sorter(30, 50, 0));
     sorters.add(new Sorter(width-180, 50, 1));
