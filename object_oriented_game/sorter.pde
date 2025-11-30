@@ -6,7 +6,6 @@ class Sorter
   float hgt=100; //sorter height
   color myColor;
 
-
   //constructor
   Sorter(float sX, float sY, int colorType)
   {

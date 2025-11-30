@@ -32,7 +32,7 @@ void draw()
   bombTimer++;
   if (bombTimer>=bombTimerLength)
   {
-    //spawn bomb
+    //spawn bomb after timer is up
     bombs.add(new Bomb());
     bombTimer=0;
   }
@@ -48,8 +48,12 @@ void draw()
     bombs.step();
   }
   
-
+  if (gameOver)
+  {//game over screen
+   drawGameOver(); 
+  }
   
+  drawScore(); //draw score
 }
 
 void mousePressed()
@@ -119,5 +123,22 @@ void resetGame()
     score=0; //reset score
     sorters.add(new Sorter(30, 50, 0));
     sorters.add(new Sorter(width-180, 50, 1));
-    
+    gameOver=false;
+}
+
+void drawScore()
+{
+ textAlign(CENTER, TOP);
+ textSize(24);
+ fill(0);
+ text("Score: "+str(score), width/2, 0);
+}
+
+void drawGameOver()
+{
+ //background(255);
+ textAlign(CENTER, TOP);
+ textSize(24);
+ fill(0);
+ text("Better luck next time!\n\nPress any button to reset", width/2, 64);  
 }

@@ -6,9 +6,13 @@ class Bomb
   color myColor;
   float targetTimer=0;
   float targetTimerLength=70;
+  float fuseTimer=0;
+  float fuseTimerLength=180;
+  
   boolean grabbed=false;
   boolean active=true;
-  
+  boolean exploded=false;
+
   //constructor
   Bomb()
   {
@@ -24,14 +28,15 @@ class Bomb
   {//draw self
     fill(myColor);
     ellipse(pos.x, pos.y, 48, 48);
-  }
+  }// end drawSelf
 
   void step()
   {//every frame do this
     pickNewTarget(); //timer to pick new movement target
+    handleFuseTimer(); //timer for exploding!
     if (!grabbed)
     {//move to targetted position when not grabbed
-      if (active)
+      if (active && !exploded)
       {//if fuse is lit / active
         pos.x=lerp(pos.x, targetPos.x, .03);
         pos.y=lerp(pos.y, targetPos.y, .03);
@@ -41,7 +46,9 @@ class Bomb
       pos.x=mouseX;
       pos.y=mouseY;
     }
-  }
+  }//end Step
+
+
 
   void pickNewTarget()
   {//pick a new movement position to target after a randomized timer
@@ -54,12 +61,12 @@ class Bomb
       targetPos.y=(random(200, 350));
       targetTimerLength=random(60, 100);
       targetTimer=0;
-    }//end timer check
+    }
   }//end pickNewTarget function
 
   void pickup()
   {//on mouse pickup
-    if (active)
+    if (active && !exploded && !gameOver)
     {
       grabbed=true;
     }
@@ -77,19 +84,40 @@ class Bomb
       { //position of bomb is within bounds of sorter rectangle
         if (curSorter.myColor==myColor)
         {//color matches sorter color
-          score++;
           defuse();
-        }//end color check
+        }
+        else
+        {
+          explode();
+        }
       }//end collision check
     }//end sorter loop
   }//end dropoff function
-  
+
   void defuse()
   {//called when correctly sorted
-      active=false;
-      myColor=(255);
-      score++;
-  }//end defuse function  
+    active=false;
+    myColor=(255);
+    score++;
+  }//end defuse function
+
+  void explode()
+  {//explode! after timer is up or placed wrongly
+    gameOver=true;
+    exploded=true;
+  }
   
+  void handleFuseTimer()
+  {
+    if (!exploded && active && !gameOver)
+    {
+      fuseTimer++;
+      if (fuseTimer>=fuseTimerLength)
+      {//timer is up
+        //explode now!
+        explode();
+      }    
+    }
+  }
   
 }//end Bomb class
