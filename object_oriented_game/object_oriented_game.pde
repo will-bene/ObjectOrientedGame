@@ -1,8 +1,9 @@
 //global vars
 float bombTimer=0;
-float bombTimerLength=90;
+float bombTimerLength=130;
 
-boolean gameOver=false;
+boolean gameOver=true;
+boolean firstPlay=true;
 
 int score=0;
 
@@ -19,9 +20,9 @@ Bomb heldBomb;
 
 void setup()
 {
-  size(400, 400);
+  size(800, 800);
   ellipseMode(CENTER);
-  resetGame();
+  //resetGame();
 }
 
 void draw()
@@ -31,10 +32,10 @@ void draw()
   if (bombTimer>=bombTimerLength)
   {
     //spawn bomb after timer is up
-    bombs.add(new Bomb());
+    spawnBomb();
     bombTimer=0;
     bombTimerLength--; //make bombs come faster as time goes on
-    bombTimerLength = constrain(bombTimerLength, 40, 80); //constrain so it doesn't go too low
+    bombTimerLength = constrain(bombTimerLength, 40, 999); //constrain so it doesn't go too low
   }
 
   for (Sorter sorters : sorters)
@@ -69,8 +70,8 @@ void mousePressed()
 
 void findNearestBomb()
 {
-  float curDist=48;
-  float bombRadius=48;//radius around mouse that bomb origin has to be in
+  float curDist=86;
+  float bombRadius=86;//radius around mouse that bomb origin has to be in
   Bomb curClosest=null; //currently closest bomb
   PVector mousePos = new PVector(mouseX, mouseY);
   for (int i = 0; i < bombs.size(); i++)
@@ -107,6 +108,20 @@ void keyPressed()
 }
 
 //custom functions
+
+void spawnBomb()
+{
+  if (!gameOver)
+  {
+    int bombAmnt=int(round(random(1, 3))); //choose a bomb amount from 1-3
+
+    for (var i = 0; i < bombAmnt; i++)
+    {//spawn that number of bombs
+      bombs.add(new Bomb());
+    }
+  }
+}
+
 void resetGame()
 {//called when resetting game
 
@@ -117,11 +132,12 @@ void resetGame()
 
   score=0; //reset score
   sorters.add(new Sorter(30, 50, 0)); //create left sorter
-  sorters.add(new Sorter(width-180, 50, 1)); //create right sorter
+  sorters.add(new Sorter(width-330, 50, 1)); //create right sorter
 
   bombTimer=0;
-  bombTimerLength=80;
+  bombTimerLength=130;
 
+  firstPlay=false;
   gameOver=false; //reset game over
 }
 
@@ -135,9 +151,13 @@ void drawScore()
 
 void drawGameOver()
 {//draw game over screen
-  //background(255);
+
+  String resetText="Better luck next time!"; //game over text
+  if (firstPlay)
+    resetText="BOMB SORTING"; //title screen text
+  
   textAlign(CENTER, TOP);
   textSize(24);
   fill(0);
-  text("Better luck next time!\n\nPress any button to reset", width/2, 64);
+  text(resetText+"\n\nPress any button to start", width/2, 64); //instructions
 }

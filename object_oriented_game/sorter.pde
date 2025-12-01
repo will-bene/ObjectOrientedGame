@@ -2,8 +2,8 @@ class Sorter
 {
   //default vars
   PVector pos;
-  float wid=150; //sorter width
-  float hgt=100; //sorter height
+  float wid=300; //sorter width
+  float hgt=200; //sorter height
   color myColor;
 
   //constructor

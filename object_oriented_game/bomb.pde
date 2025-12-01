@@ -7,7 +7,7 @@ class Bomb
   float targetTimer=0;
   float targetTimerLength=70;
   float fuseTimer=0;
-  float fuseTimerLength=180;
+  float fuseTimerLength=200;
   
   boolean grabbed=false;
   boolean active=true;
@@ -16,18 +16,18 @@ class Bomb
   //constructor
   Bomb()
   {
-    pos= new PVector(200, 450); //initial position
-    targetPos.x=(random(50, 350)); //initial targetpos
-    targetPos.y=(random(200, 350)); //initial targetpos
+    pos= new PVector(width/2, height+50); //initial position
+    targetPos.x=(random(100, width-100)); //initial targetpos
+    targetPos.y=(random(height/2, height-150)); //initial targetpos
 
-    myColor = allColors[int(random(0, allColors.length))]; //initial color
+    myColor = allColors[int(round(random(0, allColors.length-1)))]; //initial color, chosen at random
   }
 
   //class functions
   void drawSelf()
   {//draw self
     fill(myColor);
-    ellipse(pos.x, pos.y, 48, 48);
+    ellipse(pos.x, pos.y, 86, 86);
   }// end drawSelf
 
   void step()
@@ -38,8 +38,8 @@ class Bomb
     {//move to targetted position when not grabbed
       if (active && !exploded)
       {//if fuse is lit / active
-        pos.x=lerp(pos.x, targetPos.x, .03);
-        pos.y=lerp(pos.y, targetPos.y, .03);
+        pos.x=lerp(pos.x, targetPos.x, .01);
+        pos.y=lerp(pos.y, targetPos.y, .01);
       }
     } else
     {//grabbed, follow mouse
@@ -57,8 +57,8 @@ class Bomb
     if (targetTimer>=targetTimerLength)
     {//timer is up
       //choose new point to move to
-      targetPos.x=(random(50, 350));
-      targetPos.y=(random(200, 350));
+      targetPos.x=(random(100, width-100));
+      targetPos.y=(random(height/2, height-150));
       targetTimerLength=random(60, 100);
       targetTimer=0;
     }
@@ -75,23 +75,26 @@ class Bomb
   void dropoff()
   {//on mouse dropoff
     grabbed=false;
-
-    //detect sorter and act accordingly
-    for (int i = 0; i < sorters.size(); i++)
-    {//look through every sorter
-      Sorter curSorter = sorters.get(i); //get current sorter
-      if (  pos.x>=curSorter.pos.x && pos.x<=(curSorter.pos.x+curSorter.wid)  &&  pos.y>=curSorter.pos.y && pos.y<=(curSorter.pos.y+curSorter.hgt)  )
-      { //position of bomb is within bounds of sorter rectangle
-        if (curSorter.myColor==myColor)
-        {//color matches sorter color
-          defuse();
-        }
-        else
-        {
-          explode();
-        }
-      }//end collision check
-    }//end sorter loop
+    
+    if (!exploded && !gameOver && active)
+    {
+      //detect sorter and act accordingly
+      for (int i = 0; i < sorters.size(); i++)
+      {//look through every sorter
+        Sorter curSorter = sorters.get(i); //get current sorter
+        if (  pos.x>=curSorter.pos.x && pos.x<=(curSorter.pos.x+curSorter.wid)  &&  pos.y>=curSorter.pos.y && pos.y<=(curSorter.pos.y+curSorter.hgt)  )
+        { //position of bomb is within bounds of sorter rectangle
+          if (curSorter.myColor==myColor)
+          {//color matches sorter color
+            defuse();
+          }
+          else
+          {
+            explode();
+          }
+        }//end collision check
+      }//end sorter loop
+    }
   }//end dropoff function
 
   void defuse()
@@ -113,7 +116,7 @@ class Bomb
   
   void handleFuseTimer()
   {
-    if (!exploded && active && !gameOver)
+    if (!exploded && active && !gameOver && !grabbed)
     {
       fuseTimer++;
       if (fuseTimer>=fuseTimerLength)
