@@ -1,6 +1,7 @@
 //global vars
 float bombTimer=0;
 float bombTimerLength=130;
+float bombWid=86;
 
 boolean gameOver=true;
 boolean firstPlay=true;
@@ -15,6 +16,17 @@ ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 ArrayList<Sorter> sorters = new ArrayList<Sorter>();
 ArrayList<Particle> particles = new ArrayList<Particle>();
 
+//PImage initialization
+PImage bombWalkA[];
+PImage bombGrabA;
+
+PImage bombWalkB[];
+PImage bombGrabB;
+
+PImage bombExplode[];
+PImage bombSleep;
+
+
 //currently held bomb
 Bomb heldBomb;
 
@@ -22,8 +34,29 @@ void setup()
 {
   size(800, 800);
   ellipseMode(CENTER);
+  
+  
+  //load sprites
+  bombWalkA = new PImage[2];
+  bombWalkA[0] = loadImage("bomb1.png");
+  bombWalkA[1] = loadImage("bomb2.png");  
+  
+  bombWalkB = new PImage[2];
+  bombWalkB[0] = loadImage("bombB1.png");
+  bombWalkB[1] = loadImage("bombB2.png");  
+  
+  bombExplode = new PImage[2];
+  bombExplode[0] = loadImage("bombExplode1.png");
+  bombExplode[1] = loadImage("bombExplode2.png");  
+  
+  bombSleep = loadImage("bombSleep.png");
+  bombGrabA = loadImage("bombGrabbed.png");
+  bombGrabB = loadImage("bombGrabbedB.png");
+  
   //resetGame();
 }
+
+
 
 void draw()
 {
@@ -70,8 +103,8 @@ void mousePressed()
 
 void findNearestBomb()
 {
-  float curDist=86;
-  float bombRadius=86;//radius around mouse that bomb origin has to be in
+  float curDist=bombWid;
+  float bombRadius=bombWid;//radius around mouse that bomb origin has to be in
   Bomb curClosest=null; //currently closest bomb
   PVector mousePos = new PVector(mouseX, mouseY);
   for (int i = 0; i < bombs.size(); i++)
@@ -155,9 +188,17 @@ void drawGameOver()
   String resetText="Better luck next time!"; //game over text
   if (firstPlay)
     resetText="BOMB SORTING"; //title screen text
-  
+
   textAlign(CENTER, TOP);
   textSize(24);
   fill(0);
   text(resetText+"\n\nPress any button to start", width/2, 64); //instructions
+}
+
+void loadSprites(PImage spriteToLoad[], int spriteLength, String prefix)
+{
+    spriteToLoad = new PImage[spriteLength];
+    for (int i = 0; i < spriteToLoad.length; i++) {
+      spriteToLoad[i] = loadImage(prefix + (i + 1) + ".png");
+    }
 }

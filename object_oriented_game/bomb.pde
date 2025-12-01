@@ -7,11 +7,17 @@ class Bomb
   float targetTimer=0;
   float targetTimerLength=70;
   float fuseTimer=0;
-  float fuseTimerLength=200;
-  
+  float fuseTimerLength=250;
+
+  int imgIndex=0;
+
   boolean grabbed=false;
   boolean active=true;
   boolean exploded=false;
+
+
+
+
 
   //constructor
   Bomb()
@@ -26,8 +32,33 @@ class Bomb
   //class functions
   void drawSelf()
   {//draw self
-    fill(myColor);
-    ellipse(pos.x, pos.y, 86, 86);
+
+    if (frameCount % 10 == 0) {
+      imgIndex = (imgIndex + 1) %  bombWalkA.length;
+    }
+
+    if (exploded)
+    {
+      image(bombExplode[imgIndex], pos.x-(bombWid/2), pos.y-(bombWid/2));
+    }     
+    else if (!active)
+    {
+      image(bombSleep, pos.x-(bombWid/2), pos.y-(bombWid/2));
+    } 
+    else if (myColor==color(0, 0, 255))
+    { //blue bomb
+      if (grabbed)
+      {image(bombGrabA, pos.x-(bombWid/2), pos.y-(bombWid/2));}
+      else
+      {image(bombWalkA[imgIndex], pos.x-(bombWid/2), pos.y-(bombWid/2));}
+    } 
+    else
+    {//red bomb
+      if (grabbed)
+      {image(bombGrabB, pos.x-(bombWid/2), pos.y-(bombWid/2));}
+      else
+      {image(bombWalkB[imgIndex], pos.x-(bombWid/2), pos.y-(bombWid/2));}
+    }
   }// end drawSelf
 
   void step()
@@ -75,7 +106,7 @@ class Bomb
   void dropoff()
   {//on mouse dropoff
     grabbed=false;
-    
+
     if (!exploded && !gameOver && active)
     {
       //detect sorter and act accordingly
@@ -87,8 +118,7 @@ class Bomb
           if (curSorter.myColor==myColor)
           {//color matches sorter color
             defuse();
-          }
-          else
+          } else
           {
             explode();
           }
@@ -110,10 +140,10 @@ class Bomb
     exploded=true;
     for (int i = 0; i < 25; i++)
     {
-       particles.add(new Particle(pos.x, pos.y)); 
+      particles.add(new Particle(pos.x, pos.y));
     }
   }
-  
+
   void handleFuseTimer()
   {
     if (!exploded && active && !gameOver && !grabbed)
@@ -123,8 +153,7 @@ class Bomb
       {//timer is up
         //explode now!
         explode();
-      }    
+      }
     }
   }
-  
 }//end Bomb class
