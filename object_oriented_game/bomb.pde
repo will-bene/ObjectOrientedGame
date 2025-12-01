@@ -9,15 +9,13 @@ class Bomb
   float fuseTimer=0;
   float fuseTimerLength=250;
 
+  float drawScale=1;
+
   int imgIndex=0;
 
   boolean grabbed=false;
   boolean active=true;
   boolean exploded=false;
-
-
-
-
 
   //constructor
   Bomb()
@@ -32,33 +30,43 @@ class Bomb
   //class functions
   void drawSelf()
   {//draw self
-
+    //update image index
     if (frameCount % 10 == 0) {
       imgIndex = (imgIndex + 1) %  bombWalkA.length;
     }
 
+    pushMatrix();
+    //always stay centered
+    translate(pos.x-((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
+    //size based on drawing scale
+    scale(drawScale, drawScale);
+    //draw sprites based on state
     if (exploded)
     {
-      image(bombExplode[imgIndex], pos.x-(bombWid/2), pos.y-(bombWid/2));
-    }     
-    else if (!active)
+      image(bombExplode[imgIndex], 0, 0);
+    } else if (!active)
     {
-      image(bombSleep, pos.x-(bombWid/2), pos.y-(bombWid/2));
-    } 
-    else if (myColor==color(0, 0, 255))
+      image(bombSleep, 0, 0);
+    } else if (myColor==color(0, 0, 255))
     { //blue bomb
       if (grabbed)
-      {image(bombGrabA, pos.x-(bombWid/2), pos.y-(bombWid/2));}
-      else
-      {image(bombWalkA[imgIndex], pos.x-(bombWid/2), pos.y-(bombWid/2));}
-    } 
-    else
+      {
+        image(bombGrabA, 0, 0);
+      } else
+      {
+        image(bombWalkA[imgIndex], 0, 0);
+      }
+    } else
     {//red bomb
       if (grabbed)
-      {image(bombGrabB, pos.x-(bombWid/2), pos.y-(bombWid/2));}
-      else
-      {image(bombWalkB[imgIndex], pos.x-(bombWid/2), pos.y-(bombWid/2));}
+      {
+        image(bombGrabB, 0, 0);
+      } else
+      {
+        image(bombWalkB[imgIndex], 0, 0);
+      }
     }
+    popMatrix();
   }// end drawSelf
 
   void step()
@@ -85,6 +93,7 @@ class Bomb
   {//pick a new movement position to target after a randomized timer
 
     targetTimer++;
+
     if (targetTimer>=targetTimerLength)
     {//timer is up
       //choose new point to move to
@@ -146,6 +155,7 @@ class Bomb
 
   void handleFuseTimer()
   {
+    drawScale=map(fuseTimer, 0, fuseTimerLength, 1, 1.5);
     if (!exploded && active && !gameOver && !grabbed)
     {
       fuseTimer++;
