@@ -1,6 +1,6 @@
 //global vars
 float bombTimer=0;
-float bombTimerLength=130;
+float bombTimerLength=110;
 float bombWid=86;
 
 boolean gameOver=true;
@@ -17,14 +17,17 @@ ArrayList<Sorter> sorters = new ArrayList<Sorter>();
 ArrayList<Particle> particles = new ArrayList<Particle>();
 
 //PImage initialization
-PImage bombWalkA[];
-PImage bombGrabA;
+PImage bombWalkA[]; //walking
+PImage bombGrabA; //being grabbed
 
-PImage bombWalkB[];
-PImage bombGrabB;
+PImage bombWalkB[]; //walking
+PImage bombGrabB; //being grabbed
 
-PImage bombExplode[];
-PImage bombSleep;
+PImage bombExplode[]; //exploding
+PImage bombSleep; //sleeping
+
+PImage title;
+PImage gameOverSpr;
 
 
 //currently held bomb
@@ -37,21 +40,29 @@ void setup()
   
   
   //load sprites
-  bombWalkA = new PImage[2];
+  bombWalkA = new PImage[4];
   bombWalkA[0] = loadImage("bomb1.png");
   bombWalkA[1] = loadImage("bomb2.png");  
+  bombWalkA[2] = loadImage("bomb3.png");  
+  bombWalkA[3] = loadImage("bomb4.png");  
   
-  bombWalkB = new PImage[2];
+  bombWalkB = new PImage[4];
   bombWalkB[0] = loadImage("bombB1.png");
   bombWalkB[1] = loadImage("bombB2.png");  
+  bombWalkB[2] = loadImage("bombB3.png");  
+  bombWalkB[3] = loadImage("bombB4.png");  
   
-  bombExplode = new PImage[2];
-  bombExplode[0] = loadImage("bombExplode1.png");
-  bombExplode[1] = loadImage("bombExplode2.png");  
-  
+  bombExplode = new PImage[4];
+    for (int i = 0; i < bombExplode.length; i++) {
+      bombExplode[i] = loadImage("bombExplode" + (i + 1) + ".png");
+    }
+    
   bombSleep = loadImage("bombSleep.png");
   bombGrabA = loadImage("bombGrabbed.png");
   bombGrabB = loadImage("bombGrabbedB.png");
+  
+  title = loadImage("title.png");
+  gameOverSpr = loadImage("gameOver.png");
   
   //resetGame();
 }
@@ -168,7 +179,7 @@ void resetGame()
   sorters.add(new Sorter(width-330, 50, 1)); //create right sorter
 
   bombTimer=0;
-  bombTimerLength=130;
+  bombTimerLength=110;
 
   firstPlay=false;
   gameOver=false; //reset game over
@@ -184,15 +195,10 @@ void drawScore()
 
 void drawGameOver()
 {//draw game over screen
-
-  String resetText="Better luck next time!"; //game over text
   if (firstPlay)
-    resetText="BOMB SORTING"; //title screen text
-
-  textAlign(CENTER, TOP);
-  textSize(24);
-  fill(0);
-  text(resetText+"\n\nPress any button to start", width/2, 64); //instructions
+  {image(title, 0, 0);}
+  else
+  {image(gameOverSpr, 0, 0);}
 }
 
 void loadSprites(PImage spriteToLoad[], int spriteLength, String prefix)

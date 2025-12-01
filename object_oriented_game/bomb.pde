@@ -7,7 +7,7 @@ class Bomb
   float targetTimer=0;
   float targetTimerLength=70;
   float fuseTimer=0;
-  float fuseTimerLength=250;
+  float fuseTimerLength=300;
 
   float drawScale=1;
 
@@ -155,9 +155,9 @@ class Bomb
 
   void handleFuseTimer()
   {
-    drawScale=map(fuseTimer, 0, fuseTimerLength, 1, 1.5);
+    drawScale=map(fuseTimer, 0, fuseTimerLength, 1, 2); //change draw scaler based on how close timer is to finishing
     if (!exploded && active && !gameOver && !grabbed)
-    {
+    {//bomb is able to tick down
       fuseTimer++;
       if (fuseTimer>=fuseTimerLength)
       {//timer is up
