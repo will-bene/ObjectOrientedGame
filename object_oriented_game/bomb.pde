@@ -34,12 +34,26 @@ class Bomb
     if (frameCount % 10 == 0) {
       imgIndex = (imgIndex + 1) %  bombWalkA.length;
     }
-
+    //draw shadow
+    fill(0, 0, 0, 100);
+    ellipse(pos.x, pos.y+(32*drawScale), 64*drawScale, 24*drawScale);
+    
     pushMatrix();
     //always stay centered
-    translate(pos.x-((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
+    
     //size based on drawing scale
-    scale(drawScale, drawScale);
+    if (targetPos.x<pos.x)
+    {
+        translate(pos.x+((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
+        scale(-drawScale, drawScale);
+    }
+    else
+    {
+        translate(pos.x-((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
+        scale(drawScale, drawScale);
+    }
+    
+    
     //draw sprites based on state
     if (exploded)
     {
@@ -51,7 +65,7 @@ class Bomb
     { //blue bomb
       if (grabbed)
       {
-        image(bombGrabA, 0, 0);
+        image(bombGrabA, 0, -32);
       } else
       {
         image(bombWalkA[imgIndex], 0, 0);
@@ -60,12 +74,13 @@ class Bomb
     {//red bomb
       if (grabbed)
       {
-        image(bombGrabB, 0, 0);
+        image(bombGrabB, 0, -32);
       } else
       {
         image(bombWalkB[imgIndex], 0, 0);
       }
     }
+    
     popMatrix();
   }// end drawSelf
 
@@ -85,6 +100,10 @@ class Bomb
       pos.x=mouseX;
       pos.y=mouseY;
     }
+    if (!active)
+    { 
+       drawScale=lerp(drawScale, 0, .01); 
+    }
   }//end Step
 
 
@@ -94,7 +113,7 @@ class Bomb
 
     targetTimer++;
 
-    if (targetTimer>=targetTimerLength)
+    if (targetTimer>=targetTimerLength && active)
     {//timer is up
       //choose new point to move to
       targetPos.x=(random(100, width-100));
@@ -141,6 +160,10 @@ class Bomb
     active=false;
     myColor=(255);
     score++;
+    for (int i = 0; i < 5; i++)
+    {
+      particles.add(new Particle(pos.x, pos.y, 2));
+    }
   }//end defuse function
 
   void explode()
@@ -149,15 +172,16 @@ class Bomb
     exploded=true;
     for (int i = 0; i < 25; i++)
     {
-      particles.add(new Particle(pos.x, pos.y));
+      particles.add(new Particle(pos.x, pos.y, 1));
     }
   }
 
   void handleFuseTimer()
   {
-    drawScale=map(fuseTimer, 0, fuseTimerLength, 1, 2); //change draw scaler based on how close timer is to finishing
+    
     if (!exploded && active && !gameOver && !grabbed)
     {//bomb is able to tick down
+      drawScale=map(fuseTimer, 0, fuseTimerLength, 1, 2); //change draw scaler based on how close timer is to finishing
       fuseTimer++;
       if (fuseTimer>=fuseTimerLength)
       {//timer is up

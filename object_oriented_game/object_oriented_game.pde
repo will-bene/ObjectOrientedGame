@@ -28,6 +28,9 @@ PImage bombSleep; //sleeping
 
 PImage title;
 PImage gameOverSpr;
+PImage bg;
+PImage sorterA;
+PImage sorterB;
 
 
 //currently held bomb
@@ -63,6 +66,9 @@ void setup()
   
   title = loadImage("title.png");
   gameOverSpr = loadImage("gameOver.png");
+  bg = loadImage("bg.png");
+  sorterA = loadImage("sorterA.png");
+  sorterB = loadImage("sorterB.png");
   
   //resetGame();
 }
@@ -71,7 +77,7 @@ void setup()
 
 void draw()
 {
-  background(255);
+  image(bg, 0, 0);
   bombTimer++;
   if (bombTimer>=bombTimerLength)
   {
@@ -93,10 +99,15 @@ void draw()
     bombs.step();
   }
 
-  for (Particle particles : particles)
+  for (int i = particles.size()-1; i >0 ; i--)
   {//do every particle function
-    particles.drawSelf();
-    particles.step();
+    particles.get(i).drawSelf();
+    particles.get(i).step();
+    if (particles.get(i).pos.y>=height)
+    {//clean up offscreen particles
+        particles.remove(i);
+    }
+    
   }
 
   if (gameOver)
@@ -179,18 +190,18 @@ void resetGame()
   sorters.add(new Sorter(width-330, 50, 1)); //create right sorter
 
   bombTimer=0;
-  bombTimerLength=110;
+  bombTimerLength=110; //reset bomb timer length
 
-  firstPlay=false;
+  firstPlay=false; //can't be first play anymore
   gameOver=false; //reset game over
 }
 
 void drawScore()
 {//draw score value
   textAlign(CENTER, TOP);
-  textSize(24);
-  fill(0);
-  text("Score: "+str(score), width/2, 0);
+  textSize(32);
+  fill(255, 255, 230);
+  text(str(score), width/2, 0);
 }
 
 void drawGameOver()
