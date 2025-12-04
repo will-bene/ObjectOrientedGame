@@ -17,27 +17,33 @@ ArrayList<Sorter> sorters = new ArrayList<Sorter>();
 ArrayList<Particle> particles = new ArrayList<Particle>();
 
 //PImage initialization
-PImage bombWalkA[]; //walking
-PImage bombGrabA; //being grabbed
+PImage bombWalkA[]; //walking BLUE
+PImage bombGrabA; //being grabbed BLUE
 
-PImage bombWalkB[]; //walking
-PImage bombGrabB; //being grabbed
+PImage bombWalkB[]; //walking RED
+PImage bombGrabB; //being grabbed RED
 
 PImage bombExplode[]; //exploding
 PImage bombSleep; //sleeping
 
-PImage title;
-PImage gameOverSpr;
-PImage bg;
-PImage sorterA;
-PImage sorterB;
+PImage title; //title
+PImage gameOverSpr; //game over text
+PImage bg; //main game background
+PImage sorterA; //blue sorter
+PImage sorterB; //red sorter
 
+PImage particleA; //bad particle
+PImage particleB; //good particle
+
+PFont bubbleFont;
 
 //currently held bomb
 Bomb heldBomb;
 
 void setup()
 {
+  bubbleFont = loadFont("NSMB.vlw");
+  textFont(bubbleFont);
   size(800, 800);
   ellipseMode(CENTER);
   
@@ -70,7 +76,9 @@ void setup()
   sorterA = loadImage("sorterA.png");
   sorterB = loadImage("sorterB.png");
   
-  //resetGame();
+  particleA = loadImage("particleA.png");
+  particleB = loadImage("particleB.png");  
+
 }
 
 
@@ -83,7 +91,7 @@ void draw()
   {
     //spawn bomb after timer is up
     spawnBomb();
-    bombTimer=0;
+    bombTimer=0; //reset timer
     bombTimerLength--; //make bombs come faster as time goes on
     bombTimerLength = constrain(bombTimerLength, 40, 999); //constrain so it doesn't go too low
   }
@@ -144,21 +152,21 @@ void findNearestBomb()
   {
     //do action on requested closest bomb
     curClosest.pickup(); //pickup bomb
-    heldBomb=curClosest; //set currently held bomb as that bomb
+    heldBomb=curClosest; //set global currently held bomb as that bomb
   }
 }
 
 void mouseReleased()
 {
   if (heldBomb!=null)
-  {
-    heldBomb.dropoff();
+  { //globally held bomb is available
+    heldBomb.dropoff(); //drop that bomb
     heldBomb=null;
   }
 }
 
 void keyPressed()
-{
+{//reset game when any key pressed
   resetGame();
 }
 
@@ -200,8 +208,8 @@ void drawScore()
 {//draw score value
   textAlign(CENTER, TOP);
   textSize(32);
-  fill(255, 255, 230);
-  text(str(score), width/2, 0);
+  fill(255, 255, 255);
+  text("Score: " +str(score), width/2, 4);
 }
 
 void drawGameOver()
@@ -210,12 +218,4 @@ void drawGameOver()
   {image(title, 0, 0);}
   else
   {image(gameOverSpr, 0, 0);}
-}
-
-void loadSprites(PImage spriteToLoad[], int spriteLength, String prefix)
-{
-    spriteToLoad = new PImage[spriteLength];
-    for (int i = 0; i < spriteToLoad.length; i++) {
-      spriteToLoad[i] = loadImage(prefix + (i + 1) + ".png");
-    }
 }

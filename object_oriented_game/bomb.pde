@@ -177,8 +177,7 @@ class Bomb
   }
 
   void handleFuseTimer()
-  {
-    
+  {//handles fuse
     if (!exploded && active && !gameOver && !grabbed)
     {//bomb is able to tick down
       drawScale=map(fuseTimer, 0, fuseTimerLength, 1, 2); //change draw scaler based on how close timer is to finishing
