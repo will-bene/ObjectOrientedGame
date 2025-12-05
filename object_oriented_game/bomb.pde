@@ -31,7 +31,7 @@ class Bomb
   void drawSelf()
   {//draw self
     //update image index
-    if (frameCount % 10 == 0) {
+    if (frameCount % 8 == 0) {
       imgIndex = (imgIndex + 1) %  bombWalkA.length;
     }
     //draw shadow
@@ -56,27 +56,27 @@ class Bomb
     
     //draw sprites based on state
     if (exploded)
-    {
+    {//exploding state
       image(bombExplode[imgIndex], 0, 0);
     } else if (!active)
-    {
+    {//inactive state
       image(bombSleep, 0, 0);
     } else if (myColor==color(0, 0, 255))
     { //blue bomb
       if (grabbed)
-      {
+      {//picked up state, BLUE
         image(bombGrabA, 0, -32);
       } else
-      {
+      {//walking state, BLUE
         image(bombWalkA[imgIndex], 0, 0);
       }
     } else
     {//red bomb
       if (grabbed)
-      {
+      {//picked up state, RED
         image(bombGrabB, 0, -32);
       } else
-      {
+      {//walking state, RED
         image(bombWalkB[imgIndex], 0, 0);
       }
     }

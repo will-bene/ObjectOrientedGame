@@ -16,6 +16,8 @@ ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 ArrayList<Sorter> sorters = new ArrayList<Sorter>();
 ArrayList<Particle> particles = new ArrayList<Particle>();
 
+Transition transition; //transitional animation
+
 //PImage initialization
 PImage bombWalkA[]; //walking BLUE
 PImage bombGrabA; //being grabbed BLUE
@@ -35,50 +37,56 @@ PImage sorterB; //red sorter
 PImage particleA; //bad particle
 PImage particleB; //good particle
 
+//font
 PFont bubbleFont;
+
+//sounds
+import processing.sound.*;
+SoundFile bgm1; //title menu music
+SoundFile bgm2; //game music
 
 //currently held bomb
 Bomb heldBomb;
 
 void setup()
 {
+  
   bubbleFont = loadFont("NSMB.vlw");
   textFont(bubbleFont);
   size(800, 800);
   ellipseMode(CENTER);
-  
-  
+
+
   //load sprites
   bombWalkA = new PImage[4];
   bombWalkA[0] = loadImage("bomb1.png");
-  bombWalkA[1] = loadImage("bomb2.png");  
-  bombWalkA[2] = loadImage("bomb3.png");  
-  bombWalkA[3] = loadImage("bomb4.png");  
-  
+  bombWalkA[1] = loadImage("bomb2.png");
+  bombWalkA[2] = loadImage("bomb3.png");
+  bombWalkA[3] = loadImage("bomb4.png");
+
   bombWalkB = new PImage[4];
   bombWalkB[0] = loadImage("bombB1.png");
-  bombWalkB[1] = loadImage("bombB2.png");  
-  bombWalkB[2] = loadImage("bombB3.png");  
-  bombWalkB[3] = loadImage("bombB4.png");  
-  
+  bombWalkB[1] = loadImage("bombB2.png");
+  bombWalkB[2] = loadImage("bombB3.png");
+  bombWalkB[3] = loadImage("bombB4.png");
+
   bombExplode = new PImage[4];
-    for (int i = 0; i < bombExplode.length; i++) {
-      bombExplode[i] = loadImage("bombExplode" + (i + 1) + ".png");
-    }
-    
+  for (int i = 0; i < bombExplode.length; i++) {
+    bombExplode[i] = loadImage("bombExplode" + (i + 1) + ".png");
+  }
+
   bombSleep = loadImage("bombSleep.png");
   bombGrabA = loadImage("bombGrabbed.png");
   bombGrabB = loadImage("bombGrabbedB.png");
-  
+
   title = loadImage("title.png");
   gameOverSpr = loadImage("gameOver.png");
   bg = loadImage("bg.png");
   sorterA = loadImage("sorterA.png");
   sorterB = loadImage("sorterB.png");
-  
-  particleA = loadImage("particleA.png");
-  particleB = loadImage("particleB.png");  
 
+  particleA = loadImage("particleA.png");
+  particleB = loadImage("particleB.png");
 }
 
 
@@ -107,15 +115,16 @@ void draw()
     bombs.step();
   }
 
-  for (int i = particles.size()-1; i >0 ; i--)
+
+
+  for (int i = particles.size()-1; i >0; i--)
   {//do every particle function
     particles.get(i).drawSelf();
     particles.get(i).step();
     if (particles.get(i).pos.y>=height)
     {//clean up offscreen particles
-        particles.remove(i);
+      particles.remove(i);
     }
-    
   }
 
   if (gameOver)
@@ -124,6 +133,17 @@ void draw()
   }
 
   drawScore(); //draw score
+
+  if (transition!=null)
+  {//transition animation, needs to be drawn above everything
+    transition.step();
+    transition.drawSelf();
+    if (transition.pos.x>=width/2 && transition.active)
+    {
+      resetGameOver();
+      transition.active=false;
+    }
+  }
 }
 
 void mousePressed()
@@ -185,9 +205,15 @@ void spawnBomb()
   }
 }
 
+
 void resetGame()
 {//called when resetting game
+  //spawns transition
+  transition = new Transition();
+}
 
+void resetGameOver()
+{//called when resetting game
   //clear objects
   bombs.clear();
   sorters.clear();
@@ -209,13 +235,17 @@ void drawScore()
   textAlign(CENTER, TOP);
   textSize(32);
   fill(255, 255, 255);
+  //draw Score: + score value
   text("Score: " +str(score), width/2, 4);
 }
 
 void drawGameOver()
 {//draw game over screen
   if (firstPlay)
-  {image(title, 0, 0);}
-  else
-  {image(gameOverSpr, 0, 0);}
+  {//on first play show title screen
+    image(title, 0, 0);
+  } else
+  {//otherwise show regular game over screen
+    image(gameOverSpr, 0, 0);
+  }
 }
