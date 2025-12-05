@@ -4,7 +4,7 @@ class Sorter
   PVector pos;
   float wid=300; //sorter width
   float hgt=300; //sorter height
-  color myColor;
+  color myColor; //sorter color
 
   //constructor
   Sorter(float sX, float sY, int colorType)
@@ -16,9 +16,6 @@ class Sorter
   //class functions
   void drawSelf()
   {//draw sorter
-    //fill(myColor);
-
-    //rect(pos.x, pos.y, wid, hgt);
     if (myColor==color(0, 0, 255))
     {//blue
       image(sorterA, pos.x, pos.y);

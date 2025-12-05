@@ -45,7 +45,6 @@ class Particle
       image(particleB, 0, 0);
       noTint();
     }
-
     popMatrix();
   }
 

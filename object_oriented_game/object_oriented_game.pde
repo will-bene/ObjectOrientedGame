@@ -1,3 +1,7 @@
+//BOMBA SORT
+//By Will Beneteau
+//For GAME12805 - Programming for Game Designers 1: Fundamentals
+
 //global vars
 float bombTimer=0;
 float bombTimerLength=110;
@@ -52,14 +56,11 @@ SoundFile sndYelp; //bomb scream
 SoundFile sndExplode; //explode
 SoundFile sndScream; //bomb scream 2
 
-
-
 //currently held bomb
 Bomb heldBomb;
 
 void setup()
 {
-
   //load font
   bubbleFont = loadFont("NSMB.vlw");
   textFont(bubbleFont);
@@ -71,13 +72,11 @@ void setup()
   //sfx
   sndButton = new SoundFile(this, "se_button.wav");
   sndYelp = new SoundFile(this, "murmursound_00.wav");
-  sndExplode = new SoundFile(this, "snd_explosion.oga");
+  sndExplode = new SoundFile(this, "snd_explode.mp3");
   sndScream = new SoundFile(this, "murmursound_05.wav");
-
 
   size(800, 800);
   ellipseMode(CENTER);
-
 
   //load sprites
   bombWalkA = new PImage[4];
@@ -138,8 +137,6 @@ void draw()
     bombs.drawSelf();
     bombs.step();
   }
-
-
 
   for (int i = particles.size()-1; i >0; i--)
   {//do every particle function
