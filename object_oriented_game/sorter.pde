@@ -17,13 +17,12 @@ class Sorter
   void drawSelf()
   {//draw sorter
     //fill(myColor);
-    
+
     //rect(pos.x, pos.y, wid, hgt);
     if (myColor==color(0, 0, 255))
     {//blue
       image(sorterA, pos.x, pos.y);
-    }
-    else
+    } else
     {//red
       image(sorterB, pos.x, pos.y);
     }

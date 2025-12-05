@@ -42,17 +42,39 @@ PFont bubbleFont;
 
 //sounds
 import processing.sound.*;
+//music
 SoundFile bgm1; //title menu music
 SoundFile bgm2; //game music
+
+//sfx
+SoundFile sndButton; //start game
+SoundFile sndYelp; //bomb scream
+SoundFile sndExplode; //explode
+SoundFile sndScream; //bomb scream 2
+
+
 
 //currently held bomb
 Bomb heldBomb;
 
 void setup()
 {
-  
+
+  //load font
   bubbleFont = loadFont("NSMB.vlw");
   textFont(bubbleFont);
+
+  //load sounds
+  //music
+  bgm1 = new SoundFile(this, "kitchenmenupage.wav"); //title music
+  bgm2 = new SoundFile(this, "moles.wav"); //game music
+  //sfx
+  sndButton = new SoundFile(this, "se_button.wav");
+  sndYelp = new SoundFile(this, "murmursound_00.wav");
+  sndExplode = new SoundFile(this, "snd_explosion.oga");
+  sndScream = new SoundFile(this, "murmursound_05.wav");
+
+
   size(800, 800);
   ellipseMode(CENTER);
 
@@ -87,6 +109,8 @@ void setup()
 
   particleA = loadImage("particleA.png");
   particleB = loadImage("particleB.png");
+
+  bgm1.play();
 }
 
 
@@ -187,6 +211,7 @@ void mouseReleased()
 
 void keyPressed()
 {//reset game when any key pressed
+  sndButton.play();//play button sfx
   resetGame();
 }
 
@@ -228,6 +253,8 @@ void resetGameOver()
 
   firstPlay=false; //can't be first play anymore
   gameOver=false; //reset game over
+  bgm1.stop(); //stop title music, looping it
+  bgm2.loop(); //play or reset game music, looping it
 }
 
 void drawScore()

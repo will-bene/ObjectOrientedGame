@@ -37,23 +37,22 @@ class Bomb
     //draw shadow
     fill(0, 0, 0, 100);
     ellipse(pos.x, pos.y+(32*drawScale), 64*drawScale, 24*drawScale);
-    
+
     pushMatrix();
     //always stay centered
-    
+
     //size based on drawing scale
     if (targetPos.x<pos.x)
     {
-        translate(pos.x+((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
-        scale(-drawScale, drawScale);
-    }
-    else
+      translate(pos.x+((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
+      scale(-drawScale, drawScale);
+    } else
     {
-        translate(pos.x-((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
-        scale(drawScale, drawScale);
+      translate(pos.x-((bombWid*drawScale)/2), pos.y-((bombWid*drawScale)/2));
+      scale(drawScale, drawScale);
     }
-    
-    
+
+
     //draw sprites based on state
     if (exploded)
     {//exploding state
@@ -80,7 +79,7 @@ class Bomb
         image(bombWalkB[imgIndex], 0, 0);
       }
     }
-    
+
     popMatrix();
   }// end drawSelf
 
@@ -101,8 +100,8 @@ class Bomb
       pos.y=mouseY;
     }
     if (!active)
-    { 
-       drawScale=lerp(drawScale, 0, .01); 
+    {
+      drawScale=lerp(drawScale, 0, .01);
     }
   }//end Step
 
@@ -127,6 +126,7 @@ class Bomb
   {//on mouse pickup
     if (active && !exploded && !gameOver)
     {
+      sndYelp.play(random(0.9, 1.1)); //play at a slightly randomized pitch, to not be AS annoying
       grabbed=true;
     }
   }//end pickup function
@@ -157,6 +157,7 @@ class Bomb
 
   void defuse()
   {//called when correctly sorted
+    sndScream.play(random(0.9, 1.1)); //play at a slightly randomized pitch, to not be AS annoying
     active=false;
     myColor=(255);
     score++;
@@ -170,6 +171,7 @@ class Bomb
   {//explode! after timer is up or placed wrongly
     gameOver=true;
     exploded=true;
+    sndExplode.play();
     for (int i = 0; i < 25; i++)
     {
       particles.add(new Particle(pos.x, pos.y, 1));
